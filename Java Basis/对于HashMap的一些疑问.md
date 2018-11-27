@@ -181,3 +181,6 @@ Hashtable(同一把锁) :使用 synchronized 来保证线程安全，效率非�
 - [HASHMAP、HASHTABLE、CONCURRENTHASHMAP的原理与区别](http://www.yuanrengu.com/index.php/2017-01-17.html)
 - [ConcurrentHashMap实现原理及源码分析](https://www.cnblogs.com/chengxiao/p/6842045.html)
 - [java-并发-ConcurrentHashMap高并发机制-jdk1.8](https://blog.csdn.net/jianghuxiaojin/article/details/52006118#commentBox)
+
+- [面试中并发类问题的准备和学习](https://www.imooc.com/article/23969)
+
