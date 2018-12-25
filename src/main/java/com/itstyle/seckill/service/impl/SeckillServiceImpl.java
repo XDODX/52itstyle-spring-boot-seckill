@@ -86,10 +86,13 @@ public class SeckillServiceImpl implements ISeckillService {
 	public Result  startSeckilLock(long seckillId, long userId) {
 		 try {
 			lock.lock();
-			//这里、不清楚为啥、总是会被超卖101、难道锁不起作用、lock是同一个对象
-			//来自热心网友 zoain 的细心测试思考、然后自己总结了一下
-			//事物未提交之前，锁已经释放(事物提交是在整个方法执行完)，导致另一个事物读取到了这个事物未提交的数据，也就是传说中的脏读。建议锁上移
-			//给自己留个坑思考：为什么分布式锁(zk和redis)没有问题？(事实是有问题的，由于redis释放锁需要远程通信，不那么明显而已)
+			/**
+			 * 1)这里、不清楚为啥、总是会被超卖101、难道锁不起作用、lock是同一个对象
+			 * 2)来自热心网友 zoain 的细心测试思考、然后自己总结了一下,事物未提交之前，锁已经释放(事物提交是在整个方法执行完)，导致另一个事物读取到了这个事物未提交的数据，也就是传说中的脏读。建议锁上移
+			 * 3)给自己留个坑思考：为什么分布式锁(zk和redis)没有问题？(事实是有问题的，由于redis释放锁需要远程通信，不那么明显而已)
+			 * 4)2018年12月35日，更正一下,之前的解释（脏读）可能给大家一些误导,数据库默认的事务隔离级别为 可重复读(repeatable-read)，也就不可能出现脏读
+			 * 哪个这个级别是只能是幻读了？分析一下：幻读侧重于新增或删除，这里显然不是，那这里到底是什么，给各位大婶留个坑~~~~
+			 */
 			String nativeSql = "SELECT number FROM seckill WHERE seckill_id=?";
 			Object object =  dynamicQuery.nativeQueryObject(nativeSql, new Object[]{seckillId});
 			Long number =  ((Number) object).longValue();
