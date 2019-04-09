@@ -36,3 +36,6 @@ mysql默认的事务隔离级别为repeatable-read
 SELECT @@tx_isolation
 ```
 
+## 更多
+
+Spring @Transactional注解参数详解 ： [https://www.cnblogs.com/caoyc/p/5632963.html](https://www.cnblogs.com/caoyc/p/5632963.html)
