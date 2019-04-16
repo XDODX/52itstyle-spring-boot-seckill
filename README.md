@@ -4,6 +4,18 @@
 
 运行前一定要看文档说明：https://gitee.com/52itstyle/spring-boot-seckill/wikis
 
+## 推荐
+
+支付服务：https://gitee.com/52itstyle/spring-boot-pay
+
+任务调度：https://gitee.com/52itstyle/spring-boot-quartz
+
+邮件服务：https://gitee.com/52itstyle/spring-boot-mail
+
+搜索服务：https://gitee.com/52itstyle/spring-boot-elasticsearch
+
+私人网盘：https://gitee.com/52itstyle/spring-boot-CloudDisk
+
 ## 开发环境
 
 JDK1.7、Maven、Mysql、Eclipse、SpringBoot1.5.10、zookeeper3.4.6、kafka_2.11、redis-2.8.4、curator-2.10.0
