@@ -316,6 +316,13 @@ SpringBoot开发案例从0到1构建分布式秒杀系统，项目案例基本�
 
 ## 可供参考
 
+
+[三分钟深入TT猫之故障转移](https://www.cnblogs.com/smallSevens/p/7535139.html "三分钟深入TT猫之故障转移")
+
+
+[三分钟读懂TT猫分布式、微服务和集群之路](https://www.cnblogs.com/smallSevens/p/7501932.html "三分钟读懂TT猫分布式、微服务和集群之路")
+
+
 [淘宝大秒系统设计详解](https://blog.csdn.net/heyc861221/article/details/80122167 "淘宝大秒系统设计详解")
 
 [SpringBoot开发案例从0到1构建分布式秒杀系统](https://blog.52itstyle.com/archives/2853/ "SpringBoot开发案例从0到1构建分布式秒杀系统")
