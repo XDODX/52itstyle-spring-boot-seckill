@@ -122,7 +122,38 @@ HashMap在遇到多线程的操作中，如果需要重新调整HashMap的大小
 
 #### 六、JDK1.8对HashMap进行了哪些优化
 
-jdk1.8在对hash冲突的key时，如果此bucket位置上的元素数量在10以下时，还是和原来一样使用链表来进行存储，这时寻址的时间复杂度为O(n),当元素数量超过10时，使用红黑树进行代替，这时寻址的时间复杂度为O(n)
+jdk1.8在对hash冲突的key时，如果此bucket位置上的元素数量在8以下时，还是和原来一样使用链表来进行存储，这时寻址的时间复杂度为O(n),当元素数量超过8时，使用红黑树进行代替，这时寻址的时间复杂度为O(n)
+
+我们看看官方文档中的一段描述:
+
+```
+Because TreeNodes are about twice the size of regular nodes, we
+use them only when bins contain enough nodes to warrant use
+(see TREEIFY_THRESHOLD). And when they become too small (due to
+removal or resizing) they are converted back to plain bins. In
+usages with well-distributed user hashCodes, tree bins are
+rarely used. Ideally, under random hashCodes, the frequency of
+nodes in bins follows a Poisson distribution
+(http://en.wikipedia.org/wiki/Poisson_distribution) with a
+parameter of about 0.5 on average for the default resizing
+threshold of 0.75, although with a large variance because of
+resizing granularity. Ignoring variance, the expected
+occurrences of list size k are (exp(-0.5) * pow(0.5, k) /
+factorial(k)). The first values are:
+
+0: 0.60653066
+1: 0.30326533
+2: 0.07581633
+3: 0.01263606
+4: 0.00157952
+5: 0.00015795
+6: 0.00001316
+7: 0.00000094
+8: 0.00000006
+more: less than 1 in ten million
+
+```
+
 
 #### 七、HashMap 与 HashTable、ConcurrentHashMap的区别
 
