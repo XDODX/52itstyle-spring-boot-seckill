@@ -378,3 +378,8 @@ SpringBoot开发案例从0到1构建分布式秒杀系统，项目案例基本�
 在线百度语音播报：https://gitee.com/52itstyle/baidu-speech
 
 演示地址：https://speech.52itstyle.vip
+
+
+## 云服务推荐
+
+[![输入图片说明](https://images.gitee.com/uploads/images/2019/0718/130816_45e06f95_87650.png "屏幕截图.png")](https://promotion.aliyun.com/ntms/yunparter/invite.html?userCode=kutpfdo3)
