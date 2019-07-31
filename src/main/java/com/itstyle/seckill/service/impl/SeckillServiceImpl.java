@@ -57,7 +57,7 @@ public class SeckillServiceImpl implements ISeckillService {
 		dynamicQuery.nativeExecuteUpdate(nativeSql, new Object[]{seckillId});
 	}
 	@Override
-	@ServiceLimit
+	@ServiceLimit(limitType= ServiceLimit.LimitType.IP)
 	@Transactional
 	public Result startSeckil(long seckillId,long userId) {
 		//校验库存
@@ -139,7 +139,7 @@ public class SeckillServiceImpl implements ISeckillService {
 	}
 	//注意这里 限流注解 可能会出现少买 自行调整
 	@Override
-	@ServiceLimit
+	@ServiceLimit(limitType= ServiceLimit.LimitType.IP)
 	@Transactional
 	public Result startSeckilDBPCC_ONE(long seckillId, long userId) {
 		//单用户抢购一件商品或者多件都没有问题
