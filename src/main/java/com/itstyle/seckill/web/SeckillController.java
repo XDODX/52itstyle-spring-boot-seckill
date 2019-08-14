@@ -21,6 +21,9 @@ import com.itstyle.seckill.queue.disruptor.DisruptorUtil;
 import com.itstyle.seckill.queue.disruptor.SeckillEvent;
 import com.itstyle.seckill.queue.jvm.SeckillQueue;
 import com.itstyle.seckill.service.ISeckillService;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
 @Api(tags ="秒杀")
 @RestController
 @RequestMapping("/seckill")
@@ -38,11 +41,18 @@ public class SeckillController {
 	@ApiOperation(value="秒杀一(最low实现)",nickname="科帮网")
 	@PostMapping("/start")
 	public Result start(long seckillId){
-		int skillNum = 1000;
+		int skillNum = 10;
 		final CountDownLatch latch = new CountDownLatch(skillNum);//N个购买者
 		seckillService.deleteSeckill(seckillId);
 		final long killId =  seckillId;
 		LOGGER.info("开始秒杀一(会出现超卖)");
+		/**
+		 * 开启新线程之前，将RequestAttributes对象设置为子线程共享
+		 * 这里仅仅是为了测试，否则 IPUtils 中获取不到 request 对象
+		 * 用到限流注解的测试用例，都需要加一下两行代码
+		 */
+		ServletRequestAttributes sra = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		RequestContextHolder.setRequestAttributes(sra, true);
 		for(int i=0;i<skillNum;i++){
 			final long userId = i;
 			Runnable task = new Runnable() {

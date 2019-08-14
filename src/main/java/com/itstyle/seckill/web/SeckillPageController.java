@@ -63,7 +63,7 @@ public class SeckillPageController {
         params.add("AppSecretKey", appSecretKey);
         params.add("Ticket", ticket);
         params.add("Randstr", randstr);
-        params.add("UserIP", IPUtils.getIpAddr(request));
+        params.add("UserIP", IPUtils.getIpAddr());
         String msg = httpClient.client(url,method,params);
         /**
          * response: 1:验证成功，0:验证失败，100:AppSecretKey参数校验错误[required]

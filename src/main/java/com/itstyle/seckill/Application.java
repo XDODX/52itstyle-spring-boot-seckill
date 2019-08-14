@@ -19,8 +19,8 @@ public class Application {
 	 * 4. redis 订阅监听；5.kafka消息队列
 	 * 启动前 请配置application.properties中相关redis、zk以及kafka相关地址
 	 */
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
-		LOGGER.info("项目启动 ");
+		LOGGER.info("项目启动");
 	}
 }

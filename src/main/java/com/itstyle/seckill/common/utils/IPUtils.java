@@ -20,9 +20,9 @@ public class IPUtils {
 	 * 如果使用了多级反向代理的话，X-Forwarded-For的值并不止一个，而是一串IP地址，X-Forwarded-For中第一个非unknown的有效IP字符串，则为真实IP地址
 	 */
 	public static String getIpAddr() {
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		String ip = null;
 		try {
+			HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 			ip = request.getHeader("x-forwarded-for");
 			if (StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)) {
 				ip = request.getHeader("Proxy-Client-IP");
