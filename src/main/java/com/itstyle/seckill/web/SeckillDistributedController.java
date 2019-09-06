@@ -32,7 +32,7 @@ public class SeckillDistributedController {
 	private static int corePoolSize = Runtime.getRuntime().availableProcessors();
 	//调整队列数 拒绝服务
 	private static ThreadPoolExecutor executor  = new ThreadPoolExecutor(corePoolSize, corePoolSize+1, 10l, TimeUnit.SECONDS,
-			new LinkedBlockingQueue<Runnable>(10000));
+			new LinkedBlockingQueue<>(10000));
 	
 	@Autowired
 	private ISeckillService seckillService;
@@ -56,12 +56,9 @@ public class SeckillDistributedController {
 		LOGGER.info("开始秒杀一");
 		for(int i=0;i<1000;i++){
 			final long userId = i;
-			Runnable task = new Runnable() {
-				@Override
-				public void run() {
-					Result result = seckillDistributedService.startSeckilRedisLock(killId, userId);
-					LOGGER.info("用户:{}{}",userId,result.get("msg"));
-				}
+			Runnable task = () -> {
+				Result result = seckillDistributedService.startSeckilRedisLock(killId, userId);
+				LOGGER.info("用户:{}{}",userId,result.get("msg"));
 			};
 			executor.execute(task);
 		}
@@ -82,12 +79,9 @@ public class SeckillDistributedController {
 		LOGGER.info("开始秒杀二");
 		for(int i=0;i<10000;i++){
 			final long userId = i;
-			Runnable task = new Runnable() {
-				@Override
-				public void run() {
-					Result result = seckillDistributedService.startSeckilZksLock(killId, userId);
-					LOGGER.info("用户:{}{}",userId,result.get("msg"));
-				}
+			Runnable task = () -> {
+				Result result = seckillDistributedService.startSeckilZksLock(killId, userId);
+				LOGGER.info("用户:{}{}",userId,result.get("msg"));
 			};
 			executor.execute(task);
 		}
@@ -109,15 +103,12 @@ public class SeckillDistributedController {
 		LOGGER.info("开始秒杀三");
 		for(int i=0;i<1000;i++){
 			final long userId = i;
-			Runnable task = new Runnable() {
-				@Override
-				public void run() {
-					if(redisUtil.getValue(killId+"")==null){
-						//思考如何返回给用户信息ws
-						redisSender.sendChannelMess("seckill",killId+";"+userId);
-					}else{
-						//秒杀结束
-					}
+			Runnable task = () -> {
+				if(redisUtil.getValue(killId+"")==null){
+					//思考如何返回给用户信息ws
+					redisSender.sendChannelMess("seckill",killId+";"+userId);
+				}else{
+					//秒杀结束
 				}
 			};
 			executor.execute(task);
@@ -140,15 +131,12 @@ public class SeckillDistributedController {
 		LOGGER.info("开始秒杀四");
 		for(int i=0;i<1000;i++){
 			final long userId = i;
-			Runnable task = new Runnable() {
-				@Override
-				public void run() {
-					if(redisUtil.getValue(killId+"")==null){
-						//思考如何返回给用户信息ws
-						kafkaSender.sendChannelMess("seckill",killId+";"+userId);
-					}else{
-						//秒杀结束
-					}
+			Runnable task = () -> {
+				if(redisUtil.getValue(killId+"")==null){
+					//思考如何返回给用户信息ws
+					kafkaSender.sendChannelMess("seckill",killId+";"+userId);
+				}else{
+					//秒杀结束
 				}
 			};
 			executor.execute(task);
@@ -171,16 +159,13 @@ public class SeckillDistributedController {
 		LOGGER.info("开始秒杀五");
 		for(int i=0;i<1000;i++){
 			final long userId = i;
-			Runnable task = new Runnable() {
-				@Override
-				public void run() {
-					if(redisUtil.getValue(killId+"")==null){
-						Destination destination = new ActiveMQQueue("seckill.queue");
-						//思考如何返回给用户信息ws
-						activeMQSender.sendChannelMess(destination,killId+";"+userId);
-					}else{
-						//秒杀结束
-					}
+			Runnable task = () -> {
+				if(redisUtil.getValue(killId+"")==null){
+					Destination destination = new ActiveMQQueue("seckill.queue");
+					//思考如何返回给用户信息ws
+					activeMQSender.sendChannelMess(destination,killId+";"+userId);
+				}else{
+					//秒杀结束
 				}
 			};
 			executor.execute(task);

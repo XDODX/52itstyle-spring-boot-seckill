@@ -18,7 +18,7 @@
 
 ## 开发环境
 
-JDK1.7、Maven、Mysql、Eclipse、SpringBoot1.5.10、zookeeper3.4.6、kafka_2.11、redis-2.8.4、curator-2.10.0
+JDK1.8、Maven、Mysql、IntelliJ IDEA、SpringBoot1.5.10、zookeeper3.4.6、kafka_2.11、redis-2.8.4、curator-2.10.0
 
 ## 启动说明
 

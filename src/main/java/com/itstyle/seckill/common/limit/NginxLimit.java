@@ -17,17 +17,15 @@ public class NginxLimit {
 	 public static void main(String[] args) throws IOException, InterruptedException {
 	        final CountDownLatch latch = new CountDownLatch(1);
 	        for (int i = 0; i < 80; i++) {
-	            Thread t = new Thread(new Runnable() {
-	                public void run() {
-	                    try {
-	                        latch.await();
-	                        String result = NginxLimit.sendGet("http://121.42.155.213");
-	                        System.out.println(result);
-	                    } catch (InterruptedException e) {
-	                        e.printStackTrace();
-	                    }
-	                }
-	            });
+	            Thread t = new Thread(() -> {
+					try {
+						latch.await();
+						String result = NginxLimit.sendGet("http://121.42.155.213");
+						System.out.println(result);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				});
 	            t.start();
 	        }
 	        latch.countDown();

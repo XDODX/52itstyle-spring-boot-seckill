@@ -33,7 +33,7 @@ public class SeckillController {
 	private static int corePoolSize = Runtime.getRuntime().availableProcessors();
 	//创建线程池  调整队列数 拒绝服务
 	private static ThreadPoolExecutor executor  = new ThreadPoolExecutor(corePoolSize, corePoolSize+1, 10l, TimeUnit.SECONDS,
-			new LinkedBlockingQueue<Runnable>(1000));
+			new LinkedBlockingQueue<>(1000));
 	
 	@Autowired
 	private ISeckillService seckillService;
@@ -55,17 +55,14 @@ public class SeckillController {
 		RequestContextHolder.setRequestAttributes(sra, true);
 		for(int i=0;i<skillNum;i++){
 			final long userId = i;
-			Runnable task = new Runnable() {
-				@Override
-				public void run() {
-					Result result = seckillService.startSeckil(killId, userId);
-					if(result!=null){
-						LOGGER.info("用户:{}{}",userId,result.get("msg"));
-					}else{
-						LOGGER.info("用户:{}{}",userId,"哎呦喂，人也太多了，请稍后！");
-					}
-					latch.countDown();
+			Runnable task = () -> {
+				Result result = seckillService.startSeckil(killId, userId);
+				if(result!=null){
+					LOGGER.info("用户:{}{}",userId,result.get("msg"));
+				}else{
+					LOGGER.info("用户:{}{}",userId,"哎呦喂，人也太多了，请稍后！");
 				}
+				latch.countDown();
 			};
 			executor.execute(task);
 		}
@@ -88,13 +85,10 @@ public class SeckillController {
 		LOGGER.info("开始秒杀二(正常)");
 		for(int i=0;i<1000;i++){
 			final long userId = i;
-			Runnable task = new Runnable() {
-				@Override
-				public void run() {
-					Result result = seckillService.startSeckilLock(killId, userId);
-					LOGGER.info("用户:{}{}",userId,result.get("msg"));
-					latch.countDown();
-				}
+			Runnable task = () -> {
+				Result result = seckillService.startSeckilLock(killId, userId);
+				LOGGER.info("用户:{}{}",userId,result.get("msg"));
+				latch.countDown();
 			};
 			executor.execute(task);
 		}
@@ -117,13 +111,10 @@ public class SeckillController {
 		LOGGER.info("开始秒杀三(正常)");
 		for(int i=0;i<1000;i++){
 			final long userId = i;
-			Runnable task = new Runnable() {
-				@Override
-				public void run() {
-					Result result = seckillService.startSeckilAopLock(killId, userId);
-					LOGGER.info("用户:{}{}",userId,result.get("msg"));
-					latch.countDown();
-				}
+			Runnable task = () -> {
+				Result result = seckillService.startSeckilAopLock(killId, userId);
+				LOGGER.info("用户:{}{}",userId,result.get("msg"));
+				latch.countDown();
 			};
 			executor.execute(task);
 		}
@@ -146,13 +137,10 @@ public class SeckillController {
 		LOGGER.info("开始秒杀四(正常)");
 		for(int i=0;i<1000;i++){
 			final long userId = i;
-			Runnable task = new Runnable() {
-				@Override
-				public void run() {
-					Result result = seckillService.startSeckilDBPCC_ONE(killId, userId);
-					LOGGER.info("用户:{}{}",userId,result.get("msg"));
-					latch.countDown();
-				}
+			Runnable task = () -> {
+				Result result = seckillService.startSeckilDBPCC_ONE(killId, userId);
+				LOGGER.info("用户:{}{}",userId,result.get("msg"));
+				latch.countDown();
 			};
 			executor.execute(task);
 		}
@@ -175,13 +163,10 @@ public class SeckillController {
 		LOGGER.info("开始秒杀五(正常、数据库锁最优实现)");
 		for(int i=0;i<1000;i++){
 			final long userId = i;
-			Runnable task = new Runnable() {
-				@Override
-				public void run() {
-					Result result = seckillService.startSeckilDBPCC_TWO(killId, userId);
-					LOGGER.info("用户:{}{}",userId,result.get("msg"));
-					latch.countDown();
-				}
+			Runnable task = () -> {
+				Result result = seckillService.startSeckilDBPCC_TWO(killId, userId);
+				LOGGER.info("用户:{}{}",userId,result.get("msg"));
+				latch.countDown();
 			};
 			executor.execute(task);
 		}
@@ -204,15 +189,12 @@ public class SeckillController {
 		LOGGER.info("开始秒杀六(正常、数据库锁最优实现)");
 		for(int i=0;i<1000;i++){
 			final long userId = i;
-			Runnable task = new Runnable() {
-				@Override
-				public void run() {
-					//这里使用的乐观锁、可以自定义抢购数量、如果配置的抢购人数比较少、比如120:100(人数:商品) 会出现少买的情况
-					//用户同时进入会出现更新失败的情况
-					Result result = seckillService.startSeckilDBOCC(killId, userId,1);
-					LOGGER.info("用户:{}{}",userId,result.get("msg"));
-					latch.countDown();
-				}
+			Runnable task = () -> {
+				//这里使用的乐观锁、可以自定义抢购数量、如果配置的抢购人数比较少、比如120:100(人数:商品) 会出现少买的情况
+				//用户同时进入会出现更新失败的情况
+				Result result = seckillService.startSeckilDBOCC(killId, userId,1);
+				LOGGER.info("用户:{}{}",userId,result.get("msg"));
+				latch.countDown();
 			};
 			executor.execute(task);
 		}
@@ -233,23 +215,20 @@ public class SeckillController {
 		LOGGER.info("开始秒杀柒(正常)");
 		for(int i=0;i<1000;i++){
 			final long userId = i;
-			Runnable task = new Runnable() {
-				@Override
-				public void run() {
-					SuccessKilled kill = new SuccessKilled();
-					kill.setSeckillId(killId);
-					kill.setUserId(userId);
-					try {
-						Boolean flag = SeckillQueue.getMailQueue().produce(kill);
-						if(flag){
-							LOGGER.info("用户:{}{}",kill.getUserId(),"秒杀成功");
-						}else{
-							LOGGER.info("用户:{}{}",userId,"秒杀失败");
-						}
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+			Runnable task = () -> {
+				SuccessKilled kill = new SuccessKilled();
+				kill.setSeckillId(killId);
+				kill.setUserId(userId);
+				try {
+					Boolean flag = SeckillQueue.getMailQueue().produce(kill);
+					if(flag){
+						LOGGER.info("用户:{}{}",kill.getUserId(),"秒杀成功");
+					}else{
 						LOGGER.info("用户:{}{}",userId,"秒杀失败");
 					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					LOGGER.info("用户:{}{}",userId,"秒杀失败");
 				}
 			};
 			executor.execute(task);
@@ -271,14 +250,11 @@ public class SeckillController {
 		LOGGER.info("开始秒杀八(正常)");
 		for(int i=0;i<1000;i++){
 			final long userId = i;
-			Runnable task = new Runnable() {
-				@Override
-				public void run() {
-					SeckillEvent kill = new SeckillEvent();
-					kill.setSeckillId(killId);
-					kill.setUserId(userId);
-					DisruptorUtil.producer(kill);
-				}
+			Runnable task = () -> {
+				SeckillEvent kill = new SeckillEvent();
+				kill.setSeckillId(killId);
+				kill.setUserId(userId);
+				DisruptorUtil.producer(kill);
 			};
 			executor.execute(task);
 		}
