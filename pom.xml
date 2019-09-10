@@ -131,6 +131,11 @@
 		    <groupId>org.springframework.boot</groupId>  
 		    <artifactId>spring-boot-starter-actuator</artifactId>  
 		</dependency>
+	    <dependency>
+	 	    <groupId>com.alibaba.csp</groupId>
+		    <artifactId>sentinel-core</artifactId>
+		    <version>1.6.3</version>
+	     </dependency>
   </dependencies>
   <build>
         <finalName>spring-boot-seckill</finalName><plugins>
