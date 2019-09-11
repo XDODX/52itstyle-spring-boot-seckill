@@ -21,6 +21,7 @@ import com.itstyle.seckill.repository.SeckillRepository;
 import com.itstyle.seckill.service.ISeckillService;
 @Service("seckillService")
 public class SeckillServiceImpl implements ISeckillService {
+
     /**
      * 思考：为什么不用synchronized
      * service 默认是单例的，并发下lock只有一个实例
@@ -73,8 +74,21 @@ public class SeckillServiceImpl implements ISeckillService {
 			killed.setSeckillId(seckillId);
 			killed.setUserId(userId);
 			killed.setState((short)0);
-			killed.setCreateTime(new Timestamp(new Date().getTime()));
+			Timestamp createTime = new Timestamp(new Date().getTime());
+			killed.setCreateTime(createTime);
 			dynamicQuery.save(killed);
+            /**
+             * 这里仅仅是分表而已，提供一种思路，供参考，测试的时候自行建表
+             * 按照用户 ID 来做 hash分散订单数据。
+             * 要扩容的时候，为了减少迁移的数据量，一般扩容是以倍数的形式增加。
+             * 比如原来是8个库，扩容的时候，就要增加到16个库，再次扩容，就增加到32个库。
+             * 这样迁移的数据量，就小很多了。
+             * 这个问题不算很大问题，毕竟一次扩容，可以保证比较长的时间，而且使用倍数增加的方式，已经减少了数据迁移量。
+             */
+            String table = "success_killed_"+userId%8;
+            nativeSql = "INSERT INTO "+table+" (seckill_id, user_id,state,create_time)VALUES(?,?,?,?)";
+            Object[] params = new Object[]{seckillId,userId,(short)0,createTime};
+            dynamicQuery.nativeExecuteUpdate(nativeSql,params);
 			//支付
 			return Result.ok(SeckillStatEnum.SUCCESS);
 		}else{
