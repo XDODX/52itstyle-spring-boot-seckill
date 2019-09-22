@@ -318,6 +318,9 @@ SpringBoot开发案例从0到1构建分布式秒杀系统，项目案例基本�
 
 ## 可供参考
 
+[SpringBoot 2.0 + Nacos + Sentinel 流控规则集中存储](https://blog.52itstyle.vip/archives/4433/)
+
+[SpringBoot 2.0 + 阿里巴巴 Sentinel 动态限流实战](https://blog.52itstyle.vip/archives/4395/)
 
 [三分钟深入TT猫之故障转移](https://www.cnblogs.com/smallSevens/p/7535139.html "三分钟深入TT猫之故障转移")
 
