@@ -55,7 +55,7 @@ public class SeckillPageController {
 		return Result.ok(List);
 	}
 	
-	@RequestMapping("/startSeckill")
+	@PostMapping("/startSeckill")
     public Result  startSeckill(String ticket,String randstr,HttpServletRequest request) {
         HttpMethod method =HttpMethod.POST;
         MultiValueMap<String, String> params= new LinkedMultiValueMap<String, String>();
