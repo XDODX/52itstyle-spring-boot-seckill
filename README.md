@@ -6,6 +6,8 @@
 
 ## 推荐
 
+小黄图床：https://www.cloudbed.vip
+
 支付服务：https://gitee.com/52itstyle/spring-boot-pay
 
 任务调度：https://gitee.com/52itstyle/spring-boot-quartz
